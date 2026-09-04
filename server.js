@@ -19,6 +19,7 @@ mongoose
 // Mongoose Schema & Model
 const formSchema = new mongoose.Schema({
   name: { type: String, required: true },
+  email: { type: String, required: true },
   phone: { type: String, required: true },
   segment: { type: String, required: true },
   investment: { type: String, required: true },
@@ -31,14 +32,15 @@ const FormSubmission = mongoose.model("FormSubmission", formSchema);
 // API Route for Form Submission
 app.post("/api/submit", async (req, res) => {
   try {
-    const { name, phone, segment, investment, dmatAccount } = req.body;
+    const { name, email, phone, segment, investment, dmatAccount } = req.body;
 
-    if (!name || !phone || !segment || !investment || !dmatAccount) {
+    if (!name || !email || !phone || !segment || !investment || !dmatAccount) {
       return res.status(400).json({ success: false, message: "All fields are required" });
     }
 
     const newSubmission = new FormSubmission({
       name,
+      email,
       phone,
       segment,
       investment,
