@@ -38,6 +38,21 @@ app.post("/api/submit", async (req, res) => {
       return res.status(400).json({ success: false, message: "All fields are required" });
     }
 
+    // Check for existing submission with the same email or phone
+    const existingSubmission = await FormSubmission.findOne({
+      $or: [{ email: email }, { phone: phone }],
+    });
+
+    if (existingSubmission) {
+      if (existingSubmission.email === email && existingSubmission.phone === phone) {
+        return res.status(400).json({ success: false, message: "You have already responded with this email and mobile number." });
+      } else if (existingSubmission.email === email) {
+        return res.status(400).json({ success: false, message: "You have already responded with this email." });
+      } else {
+        return res.status(400).json({ success: false, message: "You have already responded with this mobile number." });
+      }
+    }
+
     const newSubmission = new FormSubmission({
       name,
       email,
