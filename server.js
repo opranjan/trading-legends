@@ -82,6 +82,20 @@ app.get("/api/submissions", async (req, res) => {
   }
 });
 
+// API Route to Delete a Submission
+app.delete("/api/submissions/:id", async (req, res) => {
+  try {
+    const deleted = await FormSubmission.findByIdAndDelete(req.params.id);
+    if (!deleted) {
+      return res.status(404).json({ success: false, message: "Submission not found" });
+    }
+    return res.status(200).json({ success: true, message: "Submission deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting submission:", error);
+    return res.status(500).json({ success: false, message: "Internal server error" });
+  }
+});
+
 // Start Server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
